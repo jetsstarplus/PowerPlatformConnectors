@@ -4,9 +4,9 @@
       "adtInstance": {
         "type": "string",
         "uiDefinition": {
-          "displayName": "ADT Instance URL",
-          "description": "The URL where your ADT instance is hosted (must support https).",
-          "tooltip": "Your ADT domain (eg. myadtinstance.api.scus.digitaltwins.azure.net)",
+          "displayName": "ADT Instance Name:",
+          "description": "Enter your ADT Instance URI until region. eg: (instance_name.api.scus).",
+          "tooltip": "Your ADT domain (eg. instance_name.api.scus)",
           "constraints": {
             "required": "true"
           }
@@ -15,30 +15,24 @@
       "token": {
         "type": "oauthSetting",
         "oAuthSettings": {
-          "identityProvider": "aad",
-          "clientId": "<clientId>",
+          "identityProvider": "aadcertificate",
+          "clientId": "16420c1b-724e-4914-a0f4-b4399c97960e",
           "scopes": [],
           "redirectMode": "Global",
           "redirectUrl": "https://global.consent.azure-apim.net/redirect",
           "properties": {
-            "IsFirstParty": "False",
-            "AzureActiveDirectoryResourceId": "https://digitaltwins.azure.net",
-            "IsOnbehalfofLoginSupported": true
+            "IsFirstParty": "True",
+            "AzureActiveDirectoryResourceId": "https://digitaltwins.azure.net"
           },
           "customParameters": {
             "loginUri": {
               "value": "https://login.windows.net"
             },
-            "tenantId": {
-              "value": "common"
-            },
             "resourceUri": {
               "value": "https://digitaltwins.azure.net"
-            },
-            "enableOnbehalfOfLogin": {
-              "value": "false"
             }
-          }
+          },
+          "clientSecret": ""
         }
       },
       "token:TenantId": {
@@ -54,7 +48,7 @@
         }
       }
     },
-    "iconBrandColor": "#f2f2f2",
+    "iconBrandColor": "#fafafa",
     "scriptOperations": [
       "GetTwinById",
       "AddTwin",
@@ -76,8 +70,20 @@
       {
         "parameters": {
           "x-ms-apimTemplate-operationName": [
+            "UpdateModelsBoolProp"
+          ],
+          "x-ms-apimTemplateParameter.httpMethod": "@Request.OriginalHTTPMethod",
+          "x-ms-apimTemplateParameter.newPath": "/models/{twinid}"
+          },
+          "templateId": "routerequesttoendpoint",
+          "title": "Redirect Update Model to original API"
+      },
+      {
+        "parameters": {
+          "x-ms-apimTemplate-operationName": [
             "UpdateTwinStringProp",
-            "UpdateTwinBooleanProp"
+            "UpdateTwinBooleanProp",
+            "UpdateTwinDoubleProp"
           ],
           "x-ms-apimTemplateParameter.httpMethod": "@Request.OriginalHTTPMethod",
           "x-ms-apimTemplateParameter.newPath": "/digitaltwins/{twinid}"
@@ -89,7 +95,8 @@
         "parameters": {
           "x-ms-apimTemplate-operationName": [
             "UpdateComponentStringProp",
-            "UpdateComponentBooleanProp"
+            "UpdateComponentBooleanProp",
+            "UpdateComponentDoubleProp"
           ],
           "x-ms-apimTemplateParameter.httpMethod": "@Request.OriginalHTTPMethod",
           "x-ms-apimTemplateParameter.newPath": "/digitaltwins/{twinid}/components/{componentPath}"
@@ -101,7 +108,8 @@
         "parameters": {
           "x-ms-apimTemplate-operationName": [
             "UpdateRelationshipStringProp",
-            "UpdateRelationshipBooleanProp"
+            "UpdateRelationshipBooleanProp",
+            "UpdateRelationshipDoubleProp"
           ],
           "x-ms-apimTemplateParameter.httpMethod": "@Request.OriginalHTTPMethod",
           "x-ms-apimTemplateParameter.newPath": "/digitaltwins/{twinid}/relationships/{relationshipId}"
@@ -113,9 +121,10 @@
         "parameters": {
           "x-ms-apimTemplate-operationName": [
             "ListIncomingRelationships",
-            "ListRelationships"
+            "ListRelationships",
+            "ListModels"
           ],
-          "x-ms-apimTemplateParameter.nextLinkPropertyName": "continuationToken"
+          "x-ms-apimTemplateParameter.nextLinkPropertyName": "nextLink"
         },
         "templateId": "updatenextlink",
         "title": "Updates next link to make pagination work"
